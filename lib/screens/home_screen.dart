@@ -14,17 +14,26 @@ class HomeScreen extends ConsumerWidget {
     final itemNotifier = ref.watch(itemProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text("Organize")),
+      appBar: AppBar(
+        title: Text("Organize", style: TextStyle(fontWeight: FontWeight.bold)),
+        centerTitle: true,
+      ),
       body: itemNotifier.isEmpty
           ? Center(child: Text("HEllo"))
           : ListView.builder(
               itemCount: itemNotifier.length,
               itemBuilder: (context, index) {
-                final item = itemNotifier[index];
-                return ListTile(
-                  title: Text(item.name),
-                  subtitle: Text(item.description),
-                  trailing: Text("₦${item.price}"),
+                final itemList = itemNotifier[index];
+                return Dismissible(
+                  onDismissed: (direction) {
+                    item.deleteItem(itemList.id);
+                  },
+                  key: GlobalKey(),
+                  child: ListTile(
+                    title: Text(itemList.name),
+                    subtitle: Text(itemList.description),
+                    trailing: Text("₦${itemList.price}"),
+                  ),
                 );
               },
             ),
@@ -72,7 +81,10 @@ class HomeScreen extends ConsumerWidget {
                             );
                             final description = descriptionController.text
                                 .trim();
+
                             item.addItem(
+                              id: DateTime.now().microsecondsSinceEpoch
+                                  .toString(),
                               name: name,
                               price: price,
                               description: description,
