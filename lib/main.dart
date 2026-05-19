@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:organizer/screens/home_screen.dart';
+import 'package:organizer/screens/wishlist_screen.dart';
 
 void main() {
   runApp(ProviderScope(child: const MyApp()));
@@ -12,6 +12,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Flutter Demo', home: HomeScreen());
+    return MaterialApp(title: 'Flutter Demo', home: WishlistScreen());
   }
 }
