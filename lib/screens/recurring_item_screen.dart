@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:organizer/class/item.dart';
+import 'package:organizer/class/recurring_expense.dart';
 import 'package:organizer/core/theme/app_theme.dart';
 import 'package:organizer/screens/edit_wishlist.dart';
 
 class RecurringItemScreen extends ConsumerStatefulWidget {
   const RecurringItemScreen({super.key, required this.item});
 
-  final Item item;
+  final RecurringExpense item;
 
   @override
   ConsumerState<RecurringItemScreen> createState() =>
@@ -17,32 +17,32 @@ class RecurringItemScreen extends ConsumerStatefulWidget {
 class _RecurringItemScreenState extends ConsumerState<RecurringItemScreen> {
   @override
   Widget build(BuildContext context) {
-    final items = ref.watch(itemProvider);
+    final items = ref.watch(recurringItemProvider);
 
     final currentItem = items.firstWhere(
       (item) => item.id == widget.item.id,
       orElse: () => widget.item,
     );
 
-    final int priority = currentItem.priority.clamp(0, 5).toInt();
+    // final int priority = currentItem.priority.clamp(0, 5).toInt();
 
     return Scaffold(
       appBar: AppBar(
         title: const Text("WishList Item", style: AppTextStyles.headlineMedium),
-        actions: [
-          IconButton(
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                builder: (sheetContext) {
-                  return EditWishlist(item: currentItem);
-                },
-              );
-            },
-            icon: const Icon(Icons.edit),
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {
+        //       showModalBottomSheet(
+        //         context: context,
+        //         isScrollControlled: true,
+        //         builder: (sheetContext) {
+        //           return EditWishlist(item: currentItem);
+        //         },
+        //       );
+        //     },
+        //     icon: const Icon(Icons.edit),
+        //   ),
+        // ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(12),
@@ -79,40 +79,40 @@ class _RecurringItemScreenState extends ConsumerState<RecurringItemScreen> {
                     const SizedBox(height: 12),
 
                     Text(
-                      '₦ ${currentItem.price.toStringAsFixed(2)}',
+                      '₦ ${currentItem.amount.toStringAsFixed(2)}',
                       style: AppTextStyles.priceStyle,
                     ),
 
                     const SizedBox(height: 12),
 
-                    Center(
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(5, (index) {
-                              return Icon(
-                                index < priority
-                                    ? Icons.star
-                                    : Icons.star_border,
-                                color: Colors.amber,
-                                size: 26,
-                              );
-                            }),
-                          ),
+                    // Center(
+                    //   child: Column(
+                    //     children: [
+                    //       Row(
+                    //         mainAxisAlignment: MainAxisAlignment.center,
+                    //         children: List.generate(5, (index) {
+                    //           return Icon(
+                    //             index < priority
+                    //                 ? Icons.star
+                    //                 : Icons.star_border,
+                    //             color: Colors.amber,
+                    //             size: 26,
+                    //           );
+                    //         }),
+                    //       ),
 
-                          const SizedBox(height: 4),
+                    //       const SizedBox(height: 4),
 
-                          Text(
-                            'Priority: $priority/5',
-                            style: TextStyle(
-                              color: Colors.grey.shade700,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    //       Text(
+                    //         'Priority: $priority/5',
+                    //         style: TextStyle(
+                    //           color: Colors.grey.shade700,
+                    //           fontSize: 14,
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

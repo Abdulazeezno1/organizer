@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:organizer/class/recurring_expense.dart';
 import 'package:organizer/screens/item_screen.dart';
+import 'package:organizer/screens/recurring_item_screen.dart';
 
 class WishlistListview extends ConsumerWidget {
   const WishlistListview({super.key});
@@ -27,7 +28,7 @@ class WishlistListview extends ConsumerWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (ctx) => ItemScreen(item: itemList),
+                      builder: (ctx) => RecurringItemScreen(item: itemList),
                     ),
                   );
                 },
