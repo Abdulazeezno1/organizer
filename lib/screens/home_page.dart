@@ -5,6 +5,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text("HomePage")));
+    return Scaffold(
+      body: Center(child: Text("Add your salary to see recommendations")),
+    );
   }
 }

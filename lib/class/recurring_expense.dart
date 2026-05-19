@@ -1,28 +1,38 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+enum Frequency { weekly, monthly }
+
 class RecurringExpense {
   RecurringExpense({
     required this.id,
     required this.name,
     required this.amount,
     required this.frequency,
+    required this.description,
+    required this.dateAdded,
   });
-  final int id;
+  final String id;
   final String name;
   final double amount;
-  final int frequency;
+  final Frequency frequency;
+  final String description;
+  final DateTime dateAdded;
 
   RecurringExpense copyWith({
-    int? id,
+    String? id,
     String? name,
     double? amount,
-    int? frequency,
+    Frequency? frequency,
+    String? description,
+    DateTime? dateAdded,
   }) {
     return RecurringExpense(
       id: id ?? this.id,
       name: name ?? this.name,
       amount: amount ?? this.amount,
       frequency: frequency ?? this.frequency,
+      description: description ?? this.description,
+      dateAdded: dateAdded ?? this.dateAdded,
     );
   }
 }
@@ -34,21 +44,25 @@ class NewRecurringExpenseNotifier extends Notifier<List<RecurringExpense>> {
   }
 
   Future<void> addItems(
-    int id,
+    String id,
     String name,
     double amount,
-    int frequency,
+    Frequency frequency,
+    String description,
+    DateTime dateAdded,
   ) async {
     final newRecurringItems = RecurringExpense(
       id: id,
       name: name,
       amount: amount,
       frequency: frequency,
+      description: description,
+      dateAdded: dateAdded,
     );
     state = [...state, newRecurringItems];
   }
 
-  Future<void> removeItems(int id) async {
+  Future<void> removeItems(String id) async {
     state = state.where((item) => item.id != id).toList();
   }
 }

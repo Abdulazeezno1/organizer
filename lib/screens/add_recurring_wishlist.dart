@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:organizer/class/item.dart';
+import 'package:organizer/class/recurring_expense.dart';
 
-class AddWishlist extends ConsumerStatefulWidget {
-  const AddWishlist({super.key});
+class AddRecurringWishlist extends ConsumerStatefulWidget {
+  const AddRecurringWishlist({super.key});
 
   @override
-  ConsumerState<AddWishlist> createState() => _AddWishlistState();
+  ConsumerState<AddRecurringWishlist> createState() =>
+      _AddRecurringWishlistState();
 }
 
-class _AddWishlistState extends ConsumerState<AddWishlist> {
+class _AddRecurringWishlistState extends ConsumerState<AddRecurringWishlist> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
 
   String? priceError;
-  int selectedPriority = 5;
+  int selectedFrequency = 1;
 
   @override
   void dispose() {
@@ -27,7 +28,7 @@ class _AddWishlistState extends ConsumerState<AddWishlist> {
 
   @override
   Widget build(BuildContext context) {
-    final itemNotifier = ref.read(itemProvider.notifier);
+    final recurringItem = ref.read(recurringItemProvider.notifier);
 
     return Padding(
       padding: EdgeInsets.only(
@@ -42,7 +43,7 @@ class _AddWishlistState extends ConsumerState<AddWishlist> {
             spacing: 16,
             children: [
               const Text(
-                "Add Wishlist Item",
+                "Add Recurring Item",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
 
@@ -78,37 +79,26 @@ class _AddWishlistState extends ConsumerState<AddWishlist> {
                   const SizedBox(width: 12),
 
                   DropdownMenu<int>(
-                    label: const Text("Priority"),
-                    initialSelection: selectedPriority,
+                    label: const Text("Frequency"),
+                    initialSelection: selectedFrequency,
                     dropdownMenuEntries: const [
-                      DropdownMenuEntry(label: "5", value: 5),
-                      DropdownMenuEntry(label: "4", value: 4),
-                      DropdownMenuEntry(label: "3", value: 3),
-                      DropdownMenuEntry(label: "2", value: 2),
-                      DropdownMenuEntry(label: "1", value: 1),
+                      DropdownMenuEntry(label: "Weekly", value: 0),
+                      DropdownMenuEntry(label: "Monthly", value: 1),
                     ],
                     onSelected: (value) {
                       if (value == null) return;
 
                       setState(() {
-                        selectedPriority = value;
+                        selectedFrequency = value;
                       });
                     },
-                    trailingIcon: const Icon(
-                      Icons.keyboard_arrow_down_sharp,
-                      size: 20,
-                    ),
-                    selectedTrailingIcon: const Icon(
-                      Icons.keyboard_arrow_up_sharp,
-                      size: 20,
-                    ),
                   ),
                 ],
               ),
 
               TextFormField(
-                controller: descriptionController,
                 keyboardType: TextInputType.multiline,
+                controller: descriptionController,
                 maxLines: null,
                 decoration: const InputDecoration(
                   labelText: "Enter description",
@@ -123,10 +113,6 @@ class _AddWishlistState extends ConsumerState<AddWishlist> {
 
                   final price = double.tryParse(priceController.text.trim());
 
-                  if (name.isEmpty) {
-                    return;
-                  }
-
                   if (price == null) {
                     setState(() {
                       priceError = "The price is not a number";
@@ -135,14 +121,17 @@ class _AddWishlistState extends ConsumerState<AddWishlist> {
                     return;
                   }
 
-                  itemNotifier.addItem(
-                    id: DateTime.now().microsecondsSinceEpoch.toString(),
-                    name: name,
-                    price: price,
-                    description: description,
-                    priority: selectedPriority,
-                    isPurchased: false,
-                    dateAdded: DateTime.now(),
+                  final frequency = selectedFrequency == 0
+                      ? Frequency.weekly
+                      : Frequency.monthly;
+
+                  recurringItem.addItems(
+                    DateTime.now().microsecondsSinceEpoch.toString(),
+                    name,
+                    price,
+                    frequency,
+                    description,
+                    DateTime.now(),
                   );
 
                   Navigator.pop(context);
