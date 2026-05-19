@@ -1,38 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:organizer/class/item.dart';
+import 'package:organizer/core/theme/app_theme.dart';
+import 'package:organizer/screens/edit_wishlist.dart';
 
-class ItemScreen extends StatefulWidget {
+class ItemScreen extends ConsumerStatefulWidget {
   const ItemScreen({super.key, required this.item});
 
   final Item item;
 
   @override
-  State<ItemScreen> createState() => _ItemScreenState();
+  ConsumerState<ItemScreen> createState() => _ItemScreenState();
 }
 
-class _ItemScreenState extends State<ItemScreen> {
-  late final TextEditingController descriptionController;
-
-  @override
-  void initState() {
-    super.initState();
-    descriptionController = TextEditingController(
-      text: widget.item.description ?? "",
-    );
-  }
-
-  @override
-  void dispose() {
-    descriptionController.dispose();
-    super.dispose();
-  }
-
+class _ItemScreenState extends ConsumerState<ItemScreen> {
   @override
   Widget build(BuildContext context) {
-    final int priority = widget.item.priority.clamp(0, 5);
+    final items = ref.watch(itemProvider);
+
+    final currentItem = items.firstWhere(
+      (item) => item.id == widget.item.id,
+      orElse: () => widget.item,
+    );
+
+    final int priority = currentItem.priority.clamp(0, 5).toInt();
 
     return Scaffold(
-      appBar: AppBar(title: const Text("WishList Item")),
+      appBar: AppBar(
+        title: const Text("WishList Item", style: AppTextStyles.headlineMedium),
+        actions: [
+          IconButton(
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                builder: (sheetContext) {
+                  return EditWishlist(item: currentItem);
+                },
+              );
+            },
+            icon: const Icon(Icons.edit),
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
@@ -56,7 +66,7 @@ class _ItemScreenState extends State<ItemScreen> {
                   children: [
                     Center(
                       child: Text(
-                        widget.item.name,
+                        currentItem.name,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
@@ -68,11 +78,8 @@ class _ItemScreenState extends State<ItemScreen> {
                     const SizedBox(height: 12),
 
                     Text(
-                      '₦ ${widget.item.price.toStringAsFixed(2)}',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
+                      '₦ ${currentItem.price.toStringAsFixed(2)}',
+                      style: AppTextStyles.priceStyle,
                     ),
 
                     const SizedBox(height: 12),
@@ -109,19 +116,31 @@ class _ItemScreenState extends State<ItemScreen> {
                 ),
               ),
             ),
-            Divider(height: 2),
-            Text("Description", style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(widget.item.description ?? "No description"),
+
+            const Divider(height: 2),
+
+            const Text(
+              "Description",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+
+            Text(
+              currentItem.description == null ||
+                      currentItem.description!.isEmpty
+                  ? "No description"
+                  : currentItem.description!,
+            ),
+
             Text.rich(
               TextSpan(
                 children: [
-                  TextSpan(
+                  const TextSpan(
                     text: "Date Added: ",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   TextSpan(
                     text:
-                        ' ${widget.item.dateAdded.day}/${widget.item.dateAdded.month}/${widget.item.dateAdded.year}',
+                        '${currentItem.dateAdded.day}/${currentItem.dateAdded.month}/${currentItem.dateAdded.year}',
                   ),
                 ],
               ),

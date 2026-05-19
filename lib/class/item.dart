@@ -70,6 +70,29 @@ class NewItemNotifier extends Notifier<List<Item>> {
   Future<void> deleteItem(String itemId) async {
     state = state.where((item) => item.id != itemId).toList();
   }
+
+  Future<void> editItem({
+    required String id,
+    required String name,
+    required double price,
+    String? description,
+    required int priority,
+    required bool isPurchased,
+  }) async {
+    state = state.map((item) {
+      if (item.id == id) {
+        return item.copyWith(
+          name: name,
+          price: price,
+          description: description,
+          priority: priority,
+          isPurchased: isPurchased,
+        );
+      }
+
+      return item;
+    }).toList();
+  }
 }
 
 final itemProvider = NotifierProvider<NewItemNotifier, List<Item>>(

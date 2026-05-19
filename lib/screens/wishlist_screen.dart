@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:organizer/class/item.dart';
+import 'package:organizer/core/theme/app_theme.dart';
 import 'package:organizer/screens/add_wishlist.dart';
 import 'package:organizer/screens/item_screen.dart';
 
@@ -21,10 +22,7 @@ class _HomeScreenState extends ConsumerState<WishlistScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Organize",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        title: const Text("Organize"), // theme handles the style
         centerTitle: true,
       ),
 
