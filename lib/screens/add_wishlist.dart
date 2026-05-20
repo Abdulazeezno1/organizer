@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:organizer/class/item.dart';
+import 'package:salaryplan/class/item.dart';
 
 class AddWishlist extends ConsumerStatefulWidget {
   const AddWishlist({super.key});

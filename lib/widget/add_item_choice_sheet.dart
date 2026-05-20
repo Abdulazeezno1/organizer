@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:organizer/screens/add_wishlist.dart';
-import 'package:organizer/screens/add_recurring_wishlist.dart';
+import 'package:salaryplan/screens/add_wishlist.dart';
+import 'package:salaryplan/screens/add_recurring_wishlist.dart';
 
 class AddItemChoiceSheet extends StatelessWidget {
   const AddItemChoiceSheet({super.key});

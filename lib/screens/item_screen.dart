@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:organizer/class/item.dart';
-import 'package:organizer/core/theme/app_theme.dart';
-import 'package:organizer/screens/edit_wishlist.dart';
+import 'package:salaryplan/class/item.dart';
+import 'package:salaryplan/core/theme/app_theme.dart';
+import 'package:salaryplan/screens/edit_wishlist.dart';
 
 class ItemScreen extends ConsumerStatefulWidget {
   const ItemScreen({super.key, required this.item});

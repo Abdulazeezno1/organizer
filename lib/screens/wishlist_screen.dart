@@ -1,64 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:organizer/class/item.dart';
-import 'package:organizer/class/recurring_expense.dart';
-import 'package:organizer/core/theme/app_theme.dart';
-import 'package:organizer/screens/add_recurring_wishlist.dart';
-import 'package:organizer/screens/add_wishlist.dart';
-import 'package:organizer/screens/item_screen.dart';
+import 'package:salaryplan/class/item.dart';
+import 'package:salaryplan/class/recurring_expense.dart';
+import 'package:salaryplan/screens/add_recurring_wishlist.dart';
+import 'package:salaryplan/screens/add_wishlist.dart';
+import 'package:salaryplan/widget/recurring_wishlist_listview.dart';
+import 'package:salaryplan/widget/wishlist_listview.dart';
 
 class WishlistScreen extends ConsumerStatefulWidget {
   const WishlistScreen({super.key});
 
   @override
   ConsumerState<WishlistScreen> createState() {
-    return _HomeScreenState();
+    return _WishlistScreenState();
   }
 }
 
-class _HomeScreenState extends ConsumerState<WishlistScreen> {
+class _WishlistScreenState extends ConsumerState<WishlistScreen> {
   @override
   Widget build(BuildContext context) {
-    final item = ref.read(itemProvider.notifier);
-    final recurringItem = ref.read(recurringItemProvider.notifier);
-    final itemNotifier = ref.watch(itemProvider);
+    final wishlistItems = ref.watch(itemProvider);
+    final recurringItems = ref.watch(recurringItemProvider);
+
+    final bool isEmpty = wishlistItems.isEmpty && recurringItems.isEmpty;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Organize"), // theme handles the style
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text("Organize"), centerTitle: true),
 
-      body: itemNotifier.isEmpty
+      body: isEmpty
           ? const Center(
               child: Text(
                 "Add an Item",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             )
-          : ListView.builder(
-              itemCount: itemNotifier.length,
-              itemBuilder: (context, index) {
-                final itemList = itemNotifier[index];
-
-                return Dismissible(
-                  key: ValueKey(itemList.id),
-                  onDismissed: (direction) {
-                    item.deleteItem(itemList.id);
-                  },
-                  child: ListTile(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (ctx) => ItemScreen(item: itemList),
-                        ),
-                      );
-                    },
-                    title: Text(itemList.name),
-                    trailing: Text("₦${itemList.price}"),
-                  ),
-                );
-              },
+          : ListView(
+              padding: EdgeInsets.all(12),
+              children: [
+                WishlistListview(),
+                SizedBox(height: 16),
+                RecurringWishlistListview(),
+              ],
             ),
 
       floatingActionButton: FloatingActionButton(

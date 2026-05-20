@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:organizer/class/recurring_expense.dart';
-import 'package:organizer/core/theme/app_theme.dart';
-import 'package:organizer/screens/edit_wishlist.dart';
+import 'package:salaryplan/class/recurring_expense.dart';
+import 'package:salaryplan/core/theme/app_theme.dart';
+import 'package:salaryplan/screens/edit_wishlist.dart';
 
 class RecurringItemScreen extends ConsumerStatefulWidget {
   const RecurringItemScreen({super.key, required this.item});

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:organizer/screens/bottom_nav.dart';
-import 'package:organizer/screens/wishlist_screen.dart';
-import 'package:organizer/core/theme/app_theme.dart';
+import 'package:salaryplan/screens/bottom_nav.dart';
+import 'package:salaryplan/core/theme/app_theme.dart';
 
 void main() {
   runApp(ProviderScope(child: const MyApp()));
@@ -15,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'SalaryPlan',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       home: BottomNav(),

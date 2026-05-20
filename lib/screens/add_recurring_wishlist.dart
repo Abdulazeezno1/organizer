@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:organizer/class/recurring_expense.dart';
+import 'package:salaryplan/class/recurring_expense.dart';
 
 class AddRecurringWishlist extends ConsumerStatefulWidget {
   const AddRecurringWishlist({super.key});

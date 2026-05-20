@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:salaryplan/class/item.dart';
-import 'package:salaryplan/screens/item_screen.dart';
+import 'package:salaryplan/class/recurring_expense.dart';
+import 'package:salaryplan/screens/recurring_item_screen.dart';
 
-class WishlistListview extends ConsumerWidget {
-  const WishlistListview({super.key});
+class RecurringWishlistListview extends ConsumerWidget {
+  const RecurringWishlistListview({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final itemNotifier = ref.read(itemProvider.notifier);
-    final wishlistItems = ref.watch(itemProvider);
+    final recurringItemNotifier = ref.read(recurringItemProvider.notifier);
+    final recurringItems = ref.watch(recurringItemProvider);
 
-    if (wishlistItems.isEmpty) {
+    if (recurringItems.isEmpty) {
       return const SizedBox.shrink();
     }
 
@@ -19,7 +19,7 @@ class WishlistListview extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          "Wishlist Items",
+          "Recurring Items",
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
         ),
 
@@ -28,25 +28,25 @@ class WishlistListview extends ConsumerWidget {
         ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: wishlistItems.length,
+          itemCount: recurringItems.length,
           itemBuilder: (context, index) {
-            final itemList = wishlistItems[index];
+            final itemList = recurringItems[index];
 
             return Dismissible(
-              key: ValueKey("wishlist-${itemList.id}"),
+              key: ValueKey("recurring-${itemList.id}"),
               onDismissed: (direction) {
-                itemNotifier.deleteItem(itemList.id);
+                recurringItemNotifier.removeItems(itemList.id);
               },
               child: ListTile(
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (ctx) => ItemScreen(item: itemList),
+                      builder: (ctx) => RecurringItemScreen(item: itemList),
                     ),
                   );
                 },
                 title: Text(itemList.name),
-                trailing: Text("₦${itemList.price}"),
+                trailing: Text("₦${itemList.amount}"),
               ),
             );
           },
