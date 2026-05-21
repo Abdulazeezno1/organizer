@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:salaryplan/screens/history_screen.dart';
 import 'package:salaryplan/screens/home_page.dart';
 import 'package:salaryplan/screens/wishlist_screen.dart';
 
@@ -12,7 +13,7 @@ class BottomNav extends StatefulWidget {
 class _BottomNavState extends State<BottomNav> {
   int selectedIndex = 0;
 
-  final List<Widget> pages = [HomePage(), WishlistScreen()];
+  final List<Widget> pages = [HomePage(), WishlistScreen(), HistoryScreen()];
 
   void onTapped(int index) {
     setState(() {
@@ -34,6 +35,7 @@ class _BottomNavState extends State<BottomNav> {
             icon: Icon(Icons.card_giftcard),
             label: "WishList",
           ),
+          BottomNavigationBarItem(icon: Icon(Icons.history), label: "History"),
         ],
       ),
     );

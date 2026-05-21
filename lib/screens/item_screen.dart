@@ -17,6 +17,7 @@ class _ItemScreenState extends ConsumerState<ItemScreen> {
   @override
   Widget build(BuildContext context) {
     final items = ref.watch(itemProvider);
+    final itemNotifier = ref.read(itemProvider.notifier);
 
     final currentItem = items.firstWhere(
       (item) => item.id == widget.item.id,
@@ -25,9 +26,21 @@ class _ItemScreenState extends ConsumerState<ItemScreen> {
 
     final int priority = currentItem.priority.clamp(0, 5).toInt();
 
+    void bought() {
+      itemNotifier.editItem(
+        id: currentItem.id,
+        name: currentItem.name,
+        price: currentItem.price,
+        priority: currentItem.priority,
+        isPurchased: true,
+      );
+
+      Navigator.pop(context);
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("WishList Item", style: AppTextStyles.headlineMedium),
+        title: const Text("WishList Item"),
         actions: [
           IconButton(
             onPressed: () {
@@ -143,6 +156,13 @@ class _ItemScreenState extends ConsumerState<ItemScreen> {
                         '${currentItem.dateAdded.day}/${currentItem.dateAdded.month}/${currentItem.dateAdded.year}',
                   ),
                 ],
+              ),
+            ),
+
+            ElevatedButton(
+              onPressed: currentItem.isPurchased ? null : bought,
+              child: Text(
+                currentItem.isPurchased ? "Already Bought" : "Bought",
               ),
             ),
           ],

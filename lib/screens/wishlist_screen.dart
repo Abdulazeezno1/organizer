@@ -25,7 +25,7 @@ class _WishlistScreenState extends ConsumerState<WishlistScreen> {
     final bool isEmpty = wishlistItems.isEmpty && recurringItems.isEmpty;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Organize"), centerTitle: true),
+      appBar: AppBar(title: const Text("SalaryPlan"), centerTitle: true),
 
       body: isEmpty
           ? const Center(

@@ -67,6 +67,29 @@ class NewRecurringExpenseNotifier extends Notifier<List<RecurringExpense>> {
   }
 }
 
+double calculateTotalExpenses(
+  List<RecurringExpense> expenses,
+  Frequency payCycle,
+) {
+  const double weeksPerMonth = 52 / 12;
+
+  double total = 0;
+
+  for (final expense in expenses) {
+    if (expense.frequency == Frequency.monthly) {
+      total += payCycle == Frequency.weekly
+          ? expense.amount / weeksPerMonth
+          : expense.amount;
+    } else {
+      total += payCycle == Frequency.weekly
+          ? expense.amount
+          : expense.amount * weeksPerMonth;
+    }
+  }
+
+  return total;
+}
+
 final recurringItemProvider =
     NotifierProvider<NewRecurringExpenseNotifier, List<RecurringExpense>>(
       NewRecurringExpenseNotifier.new,

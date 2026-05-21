@@ -1,16 +1,28 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SalaryEntry {
-  SalaryEntry({required this.id, required this.amount, required this.date});
+  SalaryEntry({
+    required this.id,
+    required this.amount,
+    required this.date,
+    required this.description,
+  });
   final String id;
   final double amount;
+  final String description;
   final DateTime date;
 
-  SalaryEntry copyWith({String? id, double? amount, DateTime? date}) {
+  SalaryEntry copyWith({
+    String? id,
+    double? amount,
+    DateTime? date,
+    String? description,
+  }) {
     return SalaryEntry(
       id: id ?? this.id,
       amount: amount ?? this.amount,
       date: date ?? this.date,
+      description: description ?? this.description,
     );
   }
 }
@@ -25,8 +37,14 @@ class NewSalaryNotifier extends Notifier<List<SalaryEntry>> {
     required String id,
     required double amount,
     required DateTime date,
+    required String description,
   }) {
-    final newSalary = SalaryEntry(id: id, amount: amount, date: date);
+    final newSalary = SalaryEntry(
+      id: id,
+      amount: amount,
+      date: date,
+      description: description,
+    );
     state = [...state, newSalary];
   }
 
@@ -34,10 +52,19 @@ class NewSalaryNotifier extends Notifier<List<SalaryEntry>> {
     state = state.where((salary) => salary.id != id).toList();
   }
 
-  void editSalary({required String id, double? amount, DateTime? date}) {
+  void editSalary({
+    required String id,
+    double? amount,
+    String? description,
+    DateTime? date,
+  }) {
     state = state.map((salary) {
       if (salary.id == id) {
-        return salary.copyWith(amount: amount, date: date);
+        return salary.copyWith(
+          amount: amount,
+          description: description,
+          date: date,
+        );
       }
       return salary;
     }).toList();
