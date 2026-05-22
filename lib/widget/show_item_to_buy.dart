@@ -5,6 +5,7 @@ import 'package:salaryplan/class/item.dart';
 import 'package:salaryplan/class/recurring_expense.dart';
 import 'package:salaryplan/class/salary_entry.dart';
 import 'package:salaryplan/screens/item_screen.dart';
+import 'package:salaryplan/widget/confirm_alert.dart';
 
 class ShowItemToBuy extends ConsumerWidget {
   const ShowItemToBuy({super.key});
@@ -17,6 +18,10 @@ class ShowItemToBuy extends ConsumerWidget {
     final wishlistItems = ref.watch(itemProvider);
     final itemNotifier = ref.read(itemProvider.notifier);
     final recurringItems = ref.watch(recurringItemProvider);
+
+    if (salaries.isEmpty) {
+      return const Center(child: Text("Add your salary first"));
+    }
 
     final latestSalary = salaries.last;
 
@@ -39,10 +44,6 @@ class ShowItemToBuy extends ConsumerWidget {
       );
 
       itemNotifier.deleteItem(currentItem.id);
-    }
-
-    if (salaries.isEmpty) {
-      return const Center(child: Text("Add your salary first"));
     }
 
     final monthlyExpenses = calculateTotalExpenses(
@@ -78,18 +79,22 @@ class ShowItemToBuy extends ConsumerWidget {
         child: Text("No wishlist item fits your current budget"),
       );
     }
+    String getPriorityLabel(int priority) {
+      if (priority >= 4) return "High Priority";
+      if (priority >= 2) return "Medium Priority";
+      return "Low Priority";
+    }
+
+    Color getPriorityColor(int priority) {
+      if (priority >= 4) return Colors.red;
+      if (priority >= 2) return Colors.orange;
+      return Colors.green;
+    }
 
     return SizedBox.expand(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Available after expenses: ₦${availableMoney.toStringAsFixed(2)}",
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          ),
-
-          const SizedBox(height: 12),
-
           const Text(
             "Recommended items to buy",
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
@@ -107,7 +112,12 @@ class ShowItemToBuy extends ConsumerWidget {
                   child: ListTile(
                     leading: IconButton(
                       onPressed: () {
-                        bought(item);
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return ConfirmAlert(item: item);
+                          },
+                        );
                       },
                       icon: const Icon(Icons.check_circle, color: Colors.green),
                     ),
@@ -119,7 +129,22 @@ class ShowItemToBuy extends ConsumerWidget {
                       );
                     },
                     title: Text(item.name),
-                    subtitle: Text("Priority: ${item.priority}/5"),
+                    subtitle: Padding(
+                      padding: const EdgeInsets.only(top: 6),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Chip(
+                          label: Text(getPriorityLabel(item.priority)),
+                          backgroundColor: getPriorityColor(
+                            item.priority,
+                          ).withOpacity(0.12),
+                          labelStyle: TextStyle(
+                            color: getPriorityColor(item.priority),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
                     trailing: Text("₦${item.price.toStringAsFixed(2)}"),
                   ),
                 );

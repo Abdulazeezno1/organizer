@@ -24,6 +24,18 @@ class _WishlistScreenState extends ConsumerState<WishlistScreen> {
 
     final bool isEmpty = wishlistItems.isEmpty && recurringItems.isEmpty;
 
+    final totalWishlist = wishlistItems.fold<double>(
+      0,
+      (sum, item) => sum + item.price,
+    );
+
+    final totalRecurring = recurringItems.fold<double>(
+      0,
+      (sum, item) => sum + item.amount,
+    );
+
+    final totalAmount = totalWishlist + totalRecurring;
+
     return Scaffold(
       appBar: AppBar(title: const Text("SalaryPlan"), centerTitle: true),
 
@@ -35,12 +47,38 @@ class _WishlistScreenState extends ConsumerState<WishlistScreen> {
               ),
             )
           : ListView(
-              padding: EdgeInsets.all(12),
-              children: [
+              padding: const EdgeInsets.only(
+                left: 12,
+                right: 12,
+                top: 12,
+                bottom: 110,
+              ),
+              children: const [
                 WishlistListview(),
                 SizedBox(height: 16),
                 RecurringWishlistListview(),
               ],
+            ),
+
+      bottomSheet: isEmpty
+          ? null
+          : SafeArea(
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                color: Theme.of(context).scaffoldBackgroundColor,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    "Total Planned Spending: ₦${totalAmount.toStringAsFixed(2)}",
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
             ),
 
       floatingActionButton: FloatingActionButton(
