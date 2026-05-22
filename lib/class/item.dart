@@ -93,9 +93,6 @@ class NewItemNotifier extends Notifier<List<Item>> {
       return item;
     }).toList();
   }
-  Future<void> bought(String itemId)async{
-    state = state.where((item)=>item.id == itemId){}
-  }
 }
 
 final itemProvider = NotifierProvider<NewItemNotifier, List<Item>>(

@@ -37,16 +37,18 @@ class WishlistListview extends ConsumerWidget {
               onDismissed: (direction) {
                 itemNotifier.deleteItem(itemList.id);
               },
-              child: ListTile(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (ctx) => ItemScreen(item: itemList),
-                    ),
-                  );
-                },
-                title: Text(itemList.name),
-                trailing: Text("₦${itemList.price}"),
+              child: Card(
+                child: ListTile(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (ctx) => ItemScreen(item: itemList),
+                      ),
+                    );
+                  },
+                  title: Text(itemList.name),
+                  trailing: Text("₦${itemList.price}"),
+                ),
               ),
             );
           },

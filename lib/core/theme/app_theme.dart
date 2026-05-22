@@ -133,7 +133,19 @@ class AppTheme {
           elevation: 0,
         ),
       ),
-
+      listTileTheme: ListTileThemeData(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        tileColor: AppColors.surface,
+        selectedTileColor: AppColors.blush,
+        iconColor: AppColors.navy,
+        textColor: AppColors.textPrimary,
+        titleTextStyle: AppTextStyles.titleLarge,
+        subtitleTextStyle: AppTextStyles.bodySmall,
+        leadingAndTrailingTextStyle: AppTextStyles.priceStyle.copyWith(
+          fontSize: 16,
+        ),
+      ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.navy,

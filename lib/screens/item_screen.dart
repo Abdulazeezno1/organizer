@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:salaryplan/class/history_entry.dart';
 import 'package:salaryplan/class/item.dart';
 import 'package:salaryplan/core/theme/app_theme.dart';
 import 'package:salaryplan/screens/edit_wishlist.dart';
@@ -17,6 +18,7 @@ class _ItemScreenState extends ConsumerState<ItemScreen> {
   @override
   Widget build(BuildContext context) {
     final items = ref.watch(itemProvider);
+    final historyNotifier = ref.read(historyProvider.notifier);
     final itemNotifier = ref.read(itemProvider.notifier);
 
     final currentItem = items.firstWhere(
@@ -27,13 +29,14 @@ class _ItemScreenState extends ConsumerState<ItemScreen> {
     final int priority = currentItem.priority.clamp(0, 5).toInt();
 
     void bought() {
-      itemNotifier.editItem(
-        id: currentItem.id,
+      historyNotifier.addToHistory(
+        itemId: currentItem.id,
         name: currentItem.name,
         price: currentItem.price,
         priority: currentItem.priority,
-        isPurchased: true,
+        dateAdded: currentItem.dateAdded,
       );
+      itemNotifier.deleteItem(currentItem.id);
 
       Navigator.pop(context);
     }
