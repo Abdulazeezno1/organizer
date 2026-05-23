@@ -14,7 +14,7 @@ class _AddSalaryState extends ConsumerState<AddSalary> {
   final TextEditingController amountController = TextEditingController();
 
   String? amountError;
-  int selectedPriority = 5;
+  Frequencies selectedPayCycle = Frequencies.monthly;
 
   @override
   void dispose() {
@@ -25,7 +25,7 @@ class _AddSalaryState extends ConsumerState<AddSalary> {
 
   @override
   Widget build(BuildContext context) {
-    final salaryNotifier = ref.watch(salaryProvider.notifier);
+    final salaryNotifier = ref.read(salaryProvider.notifier);
 
     return Padding(
       padding: EdgeInsets.only(
@@ -34,21 +34,69 @@ class _AddSalaryState extends ConsumerState<AddSalary> {
       child: SingleChildScrollView(
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(20),
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 16,
             children: [
-              const Text(
-                "Add Salary",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Center(
+                child: Container(
+                  width: 42,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade400,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 4),
+
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 24,
+                    backgroundColor: Colors.green.withOpacity(0.12),
+                    child: const Icon(
+                      Icons.account_balance_wallet_outlined,
+                      color: Colors.green,
+                    ),
+                  ),
+
+                  const SizedBox(width: 12),
+
+                  const Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Add Salary",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 2),
+                        Text(
+                          "Enter your salary and pay cycle.",
+                          style: TextStyle(color: Colors.grey, fontSize: 13),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
 
               TextFormField(
                 controller: amountController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  labelText: "Enter Amount",
+                  labelText: "Salary amount",
+                  prefixText: "₦ ",
                   border: const OutlineInputBorder(),
                   errorText: amountError,
                 ),
@@ -61,17 +109,47 @@ class _AddSalaryState extends ConsumerState<AddSalary> {
                 },
               ),
 
+              const Text(
+                "Pay Cycle",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+
+              SizedBox(
+                width: double.infinity,
+                child: SegmentedButton<Frequencies>(
+                  segments: const [
+                    ButtonSegment(
+                      value: Frequencies.monthly,
+                      label: Text("Monthly"),
+                      icon: Icon(Icons.calendar_month),
+                    ),
+                    ButtonSegment(
+                      value: Frequencies.weekly,
+                      label: Text("Weekly"),
+                      icon: Icon(Icons.calendar_view_week),
+                    ),
+                  ],
+                  selected: {selectedPayCycle},
+                  onSelectionChanged: (value) {
+                    setState(() {
+                      selectedPayCycle = value.first;
+                    });
+                  },
+                ),
+              ),
+
               TextFormField(
                 controller: descriptionController,
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
                 decoration: const InputDecoration(
-                  labelText: "Enter description",
+                  labelText: "Description",
+                  hintText: "Optional note",
                   border: OutlineInputBorder(),
                 ),
               ),
 
-              ElevatedButton(
+              ElevatedButton.icon(
                 onPressed: () {
                   final description = descriptionController.text.trim();
 
@@ -89,12 +167,14 @@ class _AddSalaryState extends ConsumerState<AddSalary> {
                     id: DateTime.now().microsecondsSinceEpoch.toString(),
                     amount: amount,
                     description: description,
+                    payCycle: selectedPayCycle,
                     date: DateTime.now(),
                   );
 
                   Navigator.pop(context);
                 },
-                child: const Text("Save"),
+                icon: const Icon(Icons.save),
+                label: const Text("Save Salary"),
               ),
             ],
           ),

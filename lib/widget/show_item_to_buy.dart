@@ -13,10 +13,8 @@ class ShowItemToBuy extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final salaries = ref.watch(salaryProvider);
-    final historyNotifier = ref.read(historyProvider.notifier);
     final historyItems = ref.watch(historyProvider);
     final wishlistItems = ref.watch(itemProvider);
-    final itemNotifier = ref.read(itemProvider.notifier);
     final recurringItems = ref.watch(recurringItemProvider);
 
     if (salaries.isEmpty) {
@@ -33,25 +31,18 @@ class ShowItemToBuy extends ConsumerWidget {
       0,
       (sum, item) => sum + item.price,
     );
-    void bought(Item currentItem) {
-      historyNotifier.addToHistory(
-        itemId: currentItem.id,
-        name: currentItem.name,
-        price: currentItem.price,
-        description: currentItem.description,
-        priority: currentItem.priority,
-        dateAdded: currentItem.dateAdded,
-      );
 
-      itemNotifier.deleteItem(currentItem.id);
-    }
+    final payCycleForExpenses = latestSalary.payCycle == Frequencies.weekly
+        ? Frequency.weekly
+        : Frequency.monthly;
 
-    final monthlyExpenses = calculateTotalExpenses(
+    final recurringExpenses = calculateTotalExpenses(
       recurringItems,
-      Frequency.monthly,
+      payCycleForExpenses,
     );
 
-    final availableMoney = latestSalary.amount - monthlyExpenses - totalBought;
+    final availableMoney =
+        latestSalary.amount - recurringExpenses - totalBought;
 
     final sortedItems = [...wishlistItems]
       ..sort((a, b) {
@@ -79,6 +70,7 @@ class ShowItemToBuy extends ConsumerWidget {
         child: Text("No wishlist item fits your current budget"),
       );
     }
+
     String getPriorityLabel(int priority) {
       if (priority >= 4) return "High Priority";
       if (priority >= 2) return "Medium Priority";
@@ -91,13 +83,28 @@ class ShowItemToBuy extends ConsumerWidget {
       return Colors.green;
     }
 
+    String getPayCycleText() {
+      if (latestSalary.payCycle == Frequencies.weekly) {
+        return "Weekly";
+      }
+
+      return "Monthly";
+    }
+
     return SizedBox.expand(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             "Recommended items to buy",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+
+          const SizedBox(height: 4),
+
+          Text(
+            "Based on your ${getPayCycleText().toLowerCase()} salary cycle",
+            style: TextStyle(color: Colors.grey.shade700, fontSize: 13),
           ),
 
           const SizedBox(height: 8),
@@ -145,7 +152,10 @@ class ShowItemToBuy extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    trailing: Text("₦${item.price.toStringAsFixed(2)}"),
+                    trailing: Text(
+                      "₦${item.price.toStringAsFixed(2)}",
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ),
                 );
               },

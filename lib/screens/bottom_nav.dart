@@ -21,12 +21,6 @@ class _BottomNavState extends State<BottomNav> {
     RecurringScreen(),
     HistoryScreen(),
   ];
-  String _getTitle() {
-    if (selectedIndex == 0) return "Home";
-    if (selectedIndex == 1) return "Wishlist";
-    if (selectedIndex == 2) return "Recurring";
-    return "History";
-  }
 
   void onTapped(int index) {
     setState(() {
@@ -34,25 +28,20 @@ class _BottomNavState extends State<BottomNav> {
     });
   }
 
+  String getTitle() {
+    if (selectedIndex == 0) return "Home";
+    if (selectedIndex == 1) return "Wishlist";
+    if (selectedIndex == 2) return "Recurring";
+    return "History";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(_getTitle()), centerTitle: true),
+      appBar: AppBar(title: Text(getTitle()), centerTitle: true),
+
       body: pages[selectedIndex],
 
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: onTapped,
-        currentIndex: selectedIndex,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.card_giftcard),
-            label: "WishList",
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.repeat), label: "Recurring"),
-          BottomNavigationBarItem(icon: Icon(Icons.history), label: "History"),
-        ],
-      ),
       floatingActionButton: selectedIndex == 0
           ? FloatingActionButton(
               onPressed: () {
@@ -67,6 +56,20 @@ class _BottomNavState extends State<BottomNav> {
               child: const Icon(Icons.add),
             )
           : null,
+
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: onTapped,
+        currentIndex: selectedIndex,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.card_giftcard),
+            label: "Wishlist",
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.repeat), label: "Recurring"),
+          BottomNavigationBarItem(icon: Icon(Icons.history), label: "History"),
+        ],
+      ),
     );
   }
 }

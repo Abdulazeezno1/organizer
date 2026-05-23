@@ -1,28 +1,35 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+enum Frequencies { weekly, monthly }
+
 class SalaryEntry {
-  SalaryEntry({
+  const SalaryEntry({
     required this.id,
     required this.amount,
+    this.description,
+    required this.payCycle,
     required this.date,
-    required this.description,
   });
+
   final String id;
   final double amount;
-  final String description;
+  final String? description;
+  final Frequencies payCycle;
   final DateTime date;
 
   SalaryEntry copyWith({
     String? id,
     double? amount,
-    DateTime? date,
     String? description,
+    Frequencies? payCycle,
+    DateTime? date,
   }) {
     return SalaryEntry(
       id: id ?? this.id,
       amount: amount ?? this.amount,
-      date: date ?? this.date,
       description: description ?? this.description,
+      payCycle: payCycle ?? this.payCycle,
+      date: date ?? this.date,
     );
   }
 }
@@ -36,46 +43,44 @@ class NewSalaryNotifier extends Notifier<List<SalaryEntry>> {
   void addSalary({
     required String id,
     required double amount,
+    String? description,
+    required Frequencies payCycle,
     required DateTime date,
-    required String description,
   }) {
     final newSalary = SalaryEntry(
       id: id,
       amount: amount,
-      date: date,
       description: description,
+      payCycle: payCycle,
+      date: date,
     );
-    state = [...state, newSalary];
-  }
 
-  void deleteSalary({required String id}) {
-    state = state.where((salary) => salary.id != id).toList();
+    state = [...state, newSalary];
   }
 
   void editSalary({
     required String id,
-    double? amount,
+    required double amount,
     String? description,
-    DateTime? date,
+    required Frequencies payCycle,
+    required DateTime date,
   }) {
     state = state.map((salary) {
       if (salary.id == id) {
         return salary.copyWith(
           amount: amount,
           description: description,
+          payCycle: payCycle,
           date: date,
         );
       }
+
       return salary;
     }).toList();
   }
 
-  double get totalSalary {
-    double total = 0;
-    for (final salary in state) {
-      total += salary.amount;
-    }
-    return total;
+  void deleteSalary(String id) {
+    state = state.where((salary) => salary.id != id).toList();
   }
 }
 
