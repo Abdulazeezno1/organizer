@@ -2,19 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:salaryplan/class/salary_entry.dart';
 
-class AddSalary extends ConsumerStatefulWidget {
-  const AddSalary({super.key});
+class EditSalary extends ConsumerStatefulWidget {
+  const EditSalary({super.key, required this.salary});
+  final SalaryEntry salary;
 
   @override
-  ConsumerState<AddSalary> createState() => _AddSalaryState();
+  ConsumerState<EditSalary> createState() => _EditSalaryState();
 }
 
-class _AddSalaryState extends ConsumerState<AddSalary> {
-  final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController amountController = TextEditingController();
+class _EditSalaryState extends ConsumerState<EditSalary> {
+  late final TextEditingController descriptionController;
+  late final TextEditingController amountController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    descriptionController = TextEditingController(
+      text: widget.salary.description,
+    );
+    amountController = TextEditingController(
+      text: widget.salary.amount.toString(),
+    );
+  }
 
   String? amountError;
-  int selectedPriority = 5;
 
   @override
   void dispose() {
@@ -25,7 +37,7 @@ class _AddSalaryState extends ConsumerState<AddSalary> {
 
   @override
   Widget build(BuildContext context) {
-    final salaryNotifier = ref.watch(salaryProvider.notifier);
+    final salaryNotifier = ref.read(salaryProvider.notifier);
 
     return Padding(
       padding: EdgeInsets.only(
@@ -40,7 +52,7 @@ class _AddSalaryState extends ConsumerState<AddSalary> {
             spacing: 16,
             children: [
               const Text(
-                "Add Salary",
+                "Edit Salary",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
 
@@ -48,7 +60,7 @@ class _AddSalaryState extends ConsumerState<AddSalary> {
                 controller: amountController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  labelText: "Enter Amount",
+                  labelText: "Enter salary amount",
                   border: const OutlineInputBorder(),
                   errorText: amountError,
                 ),
@@ -85,11 +97,11 @@ class _AddSalaryState extends ConsumerState<AddSalary> {
                     return;
                   }
 
-                  salaryNotifier.addSalary(
-                    id: DateTime.now().microsecondsSinceEpoch.toString(),
+                  salaryNotifier.editSalary(
+                    id: widget.salary.id,
                     amount: amount,
                     description: description,
-                    date: DateTime.now(),
+                    date: widget.salary.date,
                   );
 
                   Navigator.pop(context);

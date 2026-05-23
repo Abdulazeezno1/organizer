@@ -3,6 +3,7 @@ import 'package:salaryplan/screens/history_screen.dart';
 import 'package:salaryplan/screens/home_page.dart';
 import 'package:salaryplan/screens/recurring_screen.dart';
 import 'package:salaryplan/screens/wishlist_screen.dart';
+import 'package:salaryplan/widget/add_salary.dart';
 
 class BottomNav extends StatefulWidget {
   const BottomNav({super.key});
@@ -52,6 +53,20 @@ class _BottomNavState extends State<BottomNav> {
           BottomNavigationBarItem(icon: Icon(Icons.history), label: "History"),
         ],
       ),
+      floatingActionButton: selectedIndex == 0
+          ? FloatingActionButton(
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (context) {
+                    return const AddSalary();
+                  },
+                );
+              },
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 }
