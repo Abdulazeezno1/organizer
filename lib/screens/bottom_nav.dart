@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salaryplan/screens/history_screen.dart';
 import 'package:salaryplan/screens/home_page.dart';
+import 'package:salaryplan/screens/recurring_screen.dart';
 import 'package:salaryplan/screens/wishlist_screen.dart';
 
 class BottomNav extends StatefulWidget {
@@ -13,7 +14,18 @@ class BottomNav extends StatefulWidget {
 class _BottomNavState extends State<BottomNav> {
   int selectedIndex = 0;
 
-  final List<Widget> pages = [HomePage(), WishlistScreen(), HistoryScreen()];
+  final List<Widget> pages = const [
+    HomePage(),
+    WishlistScreen(),
+    RecurringScreen(),
+    HistoryScreen(),
+  ];
+  String _getTitle() {
+    if (selectedIndex == 0) return "Home";
+    if (selectedIndex == 1) return "Wishlist";
+    if (selectedIndex == 2) return "Recurring";
+    return "History";
+  }
 
   void onTapped(int index) {
     setState(() {
@@ -24,6 +36,7 @@ class _BottomNavState extends State<BottomNav> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text(_getTitle()), centerTitle: true),
       body: pages[selectedIndex],
 
       bottomNavigationBar: BottomNavigationBar(
@@ -35,6 +48,7 @@ class _BottomNavState extends State<BottomNav> {
             icon: Icon(Icons.card_giftcard),
             label: "WishList",
           ),
+          BottomNavigationBarItem(icon: Icon(Icons.repeat), label: "Recurring"),
           BottomNavigationBarItem(icon: Icon(Icons.history), label: "History"),
         ],
       ),

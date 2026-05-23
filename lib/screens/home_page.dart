@@ -17,7 +17,6 @@ class HomePage extends ConsumerWidget {
 
     if (salaries.isEmpty) {
       return Scaffold(
-        appBar: AppBar(title: const Text("SalaryPlan"), centerTitle: true),
         body: const Center(
           child: Text(
             "Add your salary to see recommendations",

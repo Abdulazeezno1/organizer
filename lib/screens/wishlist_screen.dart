@@ -37,8 +37,6 @@ class _WishlistScreenState extends ConsumerState<WishlistScreen> {
     final totalAmount = totalWishlist + totalRecurring;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("SalaryPlan"), centerTitle: true),
-
       body: isEmpty
           ? const Center(
               child: Text(
