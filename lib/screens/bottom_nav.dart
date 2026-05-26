@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:salaryplan/screens/history_screen.dart';
 import 'package:salaryplan/screens/home_page.dart';
 import 'package:salaryplan/screens/recurring_screen.dart';
+import 'package:salaryplan/screens/settings_screen.dart';
 import 'package:salaryplan/screens/wishlist_screen.dart';
 import 'package:salaryplan/widget/add_salary.dart';
 
@@ -20,6 +21,7 @@ class _BottomNavState extends State<BottomNav> {
     WishlistScreen(),
     RecurringScreen(),
     HistoryScreen(),
+    SettingsScreen(),
   ];
 
   void onTapped(int index) {
@@ -32,6 +34,7 @@ class _BottomNavState extends State<BottomNav> {
     if (selectedIndex == 0) return "Home";
     if (selectedIndex == 1) return "Wishlist";
     if (selectedIndex == 2) return "Recurring";
+    if (selectedIndex == 4) return "Settings";
     return "History";
   }
 
@@ -68,6 +71,10 @@ class _BottomNavState extends State<BottomNav> {
           ),
           BottomNavigationBarItem(icon: Icon(Icons.repeat), label: "Recurring"),
           BottomNavigationBarItem(icon: Icon(Icons.history), label: "History"),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: "Settings",
+          ),
         ],
       ),
     );
